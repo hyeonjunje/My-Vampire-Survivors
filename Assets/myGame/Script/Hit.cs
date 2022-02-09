@@ -8,7 +8,8 @@ public class Hit : MonoBehaviour
     {
         if(collision.CompareTag("enemy"))
         {
-            Destroy(collision.gameObject);
+            ObjectPool.Instance.ReturnObject(collision.gameObject);
+            //Destroy(collision.gameObject);
         }
     }
 }

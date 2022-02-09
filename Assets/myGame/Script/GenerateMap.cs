@@ -7,17 +7,6 @@ public class GenerateMap : MonoBehaviour
     public Transform grid;         // 캐릭터에 따라 움직일 맵
     public Transform character;    // 캐릭터
 
-    void Start()
-    {
-      
-    }
-
-
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("character"))

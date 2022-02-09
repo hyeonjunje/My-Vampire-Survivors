@@ -7,14 +7,48 @@ public class SpawnerManager : MonoBehaviour
 {
     public float radius = 80.0f;
 
-    [SerializeField] private GameObject spawner;
-    //private List<GameObject> spawners = new List<GameObject>();
+    
+    private int cnt = 0;
+    private float timer = 0.0f;
+
+
+    [SerializeField] private Transform character;
+    [SerializeField] private GameObject enemy;
+
     private void Awake()
     {
-        for(int i = 0; i < 360; i += 2)
+        ObjectPool.Instance.prefab = enemy;  // enemy 프리팹을 사용한 오브젝트풀 사용
+    }
+
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer >= 5.0f)
         {
-            Vector3 pos = transform.position + new Vector3(Mathf.Cos(i * Mathf.PI / 180) * radius, Mathf.Sin(i * Mathf.PI / 180) * radius, 0);
-            Instantiate(spawner, pos, Quaternion.identity).transform.parent = transform;
+            Spawn();
+            timer = 0;
+            cnt++;
         }
+    }
+
+    private void Spawn()
+    {
+        for(var i = 0; i < cnt * 10; i++)
+        {
+            var obj = ObjectPool.Instance.GetObject();
+            obj.transform.position = randPos();
+            obj.SetActive(true);
+
+            //Instantiate(enemy, randPos(), Quaternion.identity);
+        }
+    }
+
+    private Vector3 randPos()
+    {
+        var randAngle = Random.Range(0, 359) * Mathf.Deg2Rad;
+        float posX = character.position.x + Mathf.Cos(randAngle) * radius;
+        float posy = character.position.y + Mathf.Sin(randAngle) * radius;
+
+        return new Vector3(posX, posy, 0);
     }
 }
