@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
 
     [SerializeField] private GameObject Character;
-    
 
 
     private bool isMove;
