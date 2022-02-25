@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
     SpriteRenderer spriteRenderer;
 
     int curHp;
+    float doodleAttackTime;
 
     public GameObject player;
     public GameObject canvas;
@@ -22,6 +23,7 @@ public class EnemyController : MonoBehaviour
     void OnEnable()    
     {
         curHp = enemyData.Hp;
+        hpBar.fillAmount = (float)curHp / enemyData.Hp;
         canvas.SetActive(false);
     }
 
@@ -44,10 +46,12 @@ public class EnemyController : MonoBehaviour
         transform.Translate(movement * enemyData.MoveSpeed * Time.deltaTime);   
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.tag == "weapon")
+        if (collision.tag == "ability Multi Hit")
         {
+            int abilityDamage = collision.GetComponent<Ability>().damage;
+
             StopCoroutine(hideHp());
             StartCoroutine(hideHp());
             canvas.SetActive(true);
@@ -55,9 +59,33 @@ public class EnemyController : MonoBehaviour
             Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
             transform.position.y - collision.transform.position.y).normalized;
 
-            StartCoroutine(hit(reactVec));
+            doodleAttackTime += Time.deltaTime;
+            if(doodleAttackTime > 0.5f)
+            {
+                StartCoroutine(hit(reactVec, abilityDamage));
+                doodleAttackTime = 0f;
+            }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "ability")
+        {
+            int abilityDamage = collision.GetComponent<Ability>().damage;
+
+            StopCoroutine(hideHp());
+            StartCoroutine(hideHp());
+            canvas.SetActive(true);
+
+            Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
+            transform.position.y - collision.transform.position.y).normalized;
+
+            StartCoroutine(hit(reactVec, abilityDamage));
+        }
+    }
+    
+    
 
     IEnumerator hideHp()
     {
@@ -66,9 +94,10 @@ public class EnemyController : MonoBehaviour
         canvas.SetActive(false);
     }
 
-    IEnumerator hit(Vector2 reactVec)
+    IEnumerator hit(Vector2 reactVec, int damage)
     {
-        curHp -= player.GetComponent<Player>().playerDamage;
+        //curHp -= player.GetComponent<Player>().playerDamage;
+        curHp -= damage;
         hpBar.fillAmount = (float)curHp / enemyData.Hp;
 
         if (curHp > 0)
@@ -83,6 +112,11 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            var obj = ObjectPool.Instance.GetObject("BlueSoul");
+            obj.transform.position = gameObject.transform.position;
+            obj.SetActive(true);
+
+
             ObjectPool.Instance.ReturnObject(gameObject);
             spriteRenderer.color = Color.white;
             yield break;

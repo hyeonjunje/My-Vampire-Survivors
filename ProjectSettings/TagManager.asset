@@ -8,6 +8,9 @@ TagManager:
   - character
   - enemy
   - weapon
+  - ability
+  - ability Multi Hit
+  - soul
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Monster
   - 
   - 
   - 
