@@ -17,6 +17,9 @@ public class ObjectPool : MonoBehaviour
     public GameObject redSoulPrefab;
     public GameObject blueSoulPrefab;
 
+    // 효과
+    public GameObject dmgTextPrefab;
+
     GameObject prefab;
 
     List<GameObject> Pool;
@@ -25,7 +28,7 @@ public class ObjectPool : MonoBehaviour
     public List<GameObject> doodlePool { get; private set; }
     public List<GameObject> redSoulPool { get; private set; }
     public List<GameObject> blueSoulPool { get; private set; }
-
+    public List<GameObject> dmgTextPool { get; private set; }
     private void Awake()
     {
         Instance = this;
@@ -36,6 +39,7 @@ public class ObjectPool : MonoBehaviour
         doodlePool = new List<GameObject>();
         redSoulPool = new List<GameObject>();
         blueSoulPool = new List<GameObject>();
+        dmgTextPool = new List<GameObject>();
 
         for (var i = 0; i < 50; i++)
         {
@@ -67,6 +71,12 @@ public class ObjectPool : MonoBehaviour
             obj.SetActive(false);
             blueSoulPool.Add(obj);
         }
+        for (var i = 0; i < 100; i++)
+        {
+            var obj = Instantiate(dmgTextPrefab, transform);
+            obj.SetActive(false);
+            dmgTextPool.Add(obj);
+        }
     }
 
     // 오브젝트 풀에서 관리하는 오브젝트를 반환한다.
@@ -93,6 +103,10 @@ public class ObjectPool : MonoBehaviour
             case "BlueSoul":
                 Pool = blueSoulPool;
                 prefab = blueSoulPrefab;
+                break;
+            case "DmgText":
+                Pool = dmgTextPool;
+                prefab = dmgTextPrefab;
                 break;
         }
 

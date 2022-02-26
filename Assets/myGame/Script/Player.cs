@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public gameManager gm;
+
     public int playerDamage = 10;
     public float Speed = 5.0f;
     private Animator anim;
@@ -67,9 +69,13 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, 10f);
+    }
+
+    public void levelUp(float soulAmount)
+    {
+        gm.levelUp(soulAmount);
     }
 }

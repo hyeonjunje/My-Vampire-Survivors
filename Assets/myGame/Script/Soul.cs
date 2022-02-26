@@ -5,6 +5,7 @@ using UnityEngine;
 public class Soul : MonoBehaviour
 {
     
+
     public float soulAmount;
     public float getRange;
 
@@ -20,6 +21,9 @@ public class Soul : MonoBehaviour
             }
             else
             {
+                Player player = collision.GetComponentInParent<Player>();
+                player.levelUp(soulAmount);
+
                 // 오브젝트 풀로 돌아감
                 ObjectPool.Instance.ReturnObject(gameObject);
             }

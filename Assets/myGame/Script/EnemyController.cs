@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] private EnemyData enemyData;
@@ -98,6 +98,14 @@ public class EnemyController : MonoBehaviour
     {
         //curHp -= player.GetComponent<Player>().playerDamage;
         curHp -= damage;
+
+        GameObject dmgTextObj = ObjectPool.Instance.GetObject("DmgText");
+        dmgTextObj.transform.position = transform.position + Vector3.up * 3f;
+        dmgTextObj.SetActive(true);
+        TextMeshPro dmgTextObjText = dmgTextObj.GetComponent<TextMeshPro>();
+        dmgTextObjText.text = damage.ToString();
+        
+
         hpBar.fillAmount = (float)curHp / enemyData.Hp;
 
         if (curHp > 0)

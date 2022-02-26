@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    public int level;
+    public float experience;
+    public float maxExperience;
+    public Text lvText;
+    public Image soulBar;
+
     public GameObject player;
     //public ObjectPool objectPool;
     public Text playTimeText;
@@ -64,5 +70,21 @@ public class gameManager : MonoBehaviour
         return pos;
     }
 
-    
+    /*public int level;
+    public float experience;
+    public float maxExperience;
+    public Text lvText;
+    public Image soulBar;*/
+    public void levelUp(float expAmount)
+    {
+        experience += expAmount;
+        if(experience >= maxExperience)
+        {
+            level++;
+            experience = experience - maxExperience;
+            maxExperience *= 1.1f;
+        }
+        lvText.text = "LV : " + level.ToString();
+        soulBar.fillAmount = experience / maxExperience;
+    }
 }
