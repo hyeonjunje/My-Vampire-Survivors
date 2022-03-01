@@ -7,12 +7,16 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private EnemyData enemyData;
 
+    Player playerLogic;
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
 
+    float playerHitTime = 0.2f; // 적 한명에게 맞고 그 다음 맞을 때 시간
     float curHp;
     float doodleAttackTime;
 
+    public gameManager gm;
+    public Text DestroyEnemyCount;
     public GameObject player;
     public GameObject canvas;
     public Image hpBar;
@@ -44,15 +48,19 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 movement = (player.transform.position - transform.position).normalized;
         transform.Translate(movement * enemyData.MoveSpeed * Time.deltaTime);   
+
+        if((player.transform.position - transform.position).magnitude >= 80)  // 적과 너무 멀어지면 다시 플레이어 주변으로 순간이동
+        {
+            transform.position =  gm.ranPos();
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.tag == "ability Multi Hit")
         {
-            float abilityDamage = collision.GetComponent<Ability>().totalDamage;
-
-            if (collision.name == "Doodle") abilityDamage = collision.GetComponent<Doodle>().totalDamage;
+            playerLogic = player.GetComponent<Player>();
+            float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
 
             StopCoroutine(hideHp());
             StartCoroutine(hideHp());
@@ -74,9 +82,8 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.tag == "ability")
         {
-            float abilityDamage = collision.GetComponent<Ability>().totalDamage;
-
-            if (collision.name == "Whip") abilityDamage = collision.GetComponent<Whip>().totalDamage;
+            playerLogic = player.GetComponent<Player>();
+            float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
 
             StopCoroutine(hideHp());
             StartCoroutine(hideHp());
@@ -88,8 +95,19 @@ public class EnemyController : MonoBehaviour
             StartCoroutine(hit(reactVec, abilityDamage));
         }
     }
-    
-    
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "character")
+        {
+            playerHitTime += Time.deltaTime;
+            if (playerHitTime >= 0.2f)
+            {
+                playerHitTime = 0.0f;
+                playerLogic = player.GetComponent<Player>();
+                playerLogic.printPlayerHp(enemyData.Damage);
+            }
+        }
+    }
 
     IEnumerator hideHp()
     {
@@ -100,7 +118,6 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator hit(Vector2 reactVec, float damage)
     {
-        //curHp -= player.GetComponent<Player>().playerDamage;
         curHp -= damage;
 
         GameObject dmgTextObj = ObjectPool.Instance.GetObject("DmgText");
@@ -127,7 +144,7 @@ public class EnemyController : MonoBehaviour
             var obj = ObjectPool.Instance.GetObject("RedSoul");
             obj.transform.position = gameObject.transform.position;
             obj.SetActive(true);
-
+            gm.destroyEnemyCount();
 
             ObjectPool.Instance.ReturnObject(gameObject);
             spriteRenderer.color = Color.white;

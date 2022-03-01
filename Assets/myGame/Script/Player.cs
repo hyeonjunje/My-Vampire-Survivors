@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public gameManager gm;
+    public GameObject GameOverPanel;
 
-    public int playerDamage = 10;
-    public float Speed = 5.0f;
+    public float playerDamage = 5.0f;
+    public float Speed = 10.0f;
+    public float maxHp = 100;
+    public float curHp;
+    public Image hpImage;
+
     private Animator anim;
-
     [SerializeField] private GameObject Character;
-
 
     private bool isMove;
     private Vector2 movement;
@@ -26,6 +30,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        curHp = maxHp;
         anim = GetComponentInChildren<Animator>();
     }
 
@@ -36,9 +41,10 @@ public class Player : MonoBehaviour
     }
     void move()
     {
-        movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         isMove = movement.magnitude != 0;
-        
+        Vector2 dir = movement.normalized;
+
         if (isMove)
         {
             if (movement.x > 0)
@@ -49,7 +55,7 @@ public class Player : MonoBehaviour
             {
                 Character.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
             }
-            transform.Translate(movement * Time.deltaTime * Speed);
+            transform.Translate(dir * Time.deltaTime * Speed);
             anim.SetBool("isRun", true);
         }
         else { anim.SetBool("isRun", false); }
@@ -96,5 +102,16 @@ public class Player : MonoBehaviour
     public void levelUp(float soulAmount)
     {
         gm.levelUp(soulAmount);
+    }
+
+    public void printPlayerHp(float damage)
+    {
+        curHp -= damage;
+        hpImage.fillAmount = curHp / maxHp;
+        if(curHp <= 0)
+        {
+            Time.timeScale = 0;
+            GameOverPanel.SetActive(true);
+        }
     }
 }

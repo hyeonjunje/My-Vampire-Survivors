@@ -141,4 +141,17 @@ public class ObjectPool : MonoBehaviour
     {
         obj.SetActive(false);
     }
+
+    public void AllReturnObject()
+    {
+        int iCount = transform.childCount;
+        for(int i = 0; i < iCount; i++)
+        {
+            GameObject child = transform.GetChild(i).gameObject;
+            if (child.activeSelf) // 활성화되어 있으면 전부 비활성화
+            {
+                child.SetActive(false);
+            }
+        }
+    }
 }

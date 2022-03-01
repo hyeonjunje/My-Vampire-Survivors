@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1163859808821055152}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 72, y: 62, z: 94}
+  m_LocalScale: {x: 105, y: 95, z: 127}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -123,11 +123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityLV: 0
-  damageIncreaseRate: 0
-  totalDamage: 0
+  damage: 14.265584
   coolTime: 2
   abilityName: Whip
   abilityContent: "\uCC44\uCC0D\uC744 \uD718\uB450\uB985\uB2C8\uB2E4."
   abilitySprite: {fileID: 21300000, guid: 0413daf5b4d10e94da7ed3ec2f66e843, type: 3}
   player: {fileID: 0}
-  damage: 29.282001

@@ -21,10 +21,22 @@ public class AbilityManager : MonoBehaviour
     public Image[] abilitySpriteImage;
     public Text[] abilityLevelText;
 
+    public Image[] takenAbilityImage;
+    public Image[] takenPassiveAbilityImage;
+
     List<int> abilityOrder;
 
     // 채찍은 기본 무기로
     int[] level = { 0, 1, 0, 0 };
+    int takenAbility = 0;
+    int takenPassiveAbility = 0;
+
+    private void Awake()
+    {
+        // 채찍은 기본으로 탑재
+        takenAbilityImage[takenAbility].sprite = sprites[1];
+        takenAbility++;
+    }
 
     public void display()
     {
@@ -41,6 +53,20 @@ public class AbilityManager : MonoBehaviour
         }
     }
     
+    void displayAbility(int abilityNumber)
+    {
+        if(abilityNumber < 2)   // ability
+        {
+            takenAbilityImage[takenAbility].sprite = sprites[abilityNumber];
+            takenAbility++;
+        }
+        else                   // passive
+        {
+            takenPassiveAbilityImage[takenPassiveAbility].sprite = sprites[abilityNumber];
+            takenPassiveAbility++;
+        }
+    }
+
     void selectRandomAbility()
     {
         int currentAbility = Random.Range(0, sprites.Length);
@@ -54,106 +80,58 @@ public class AbilityManager : MonoBehaviour
     public void rankUp1()
     {
         string ability = abilityNameText[0].text;
-        Doodle doodleLogic = doodlePrefab.GetComponent<Doodle>();
-        Whip whipLogic = whipPrefab.GetComponent<Whip>();
-        switch (ability)
-        {
-            case "Doodle":
-                if (!player.hasAbilityDoodle) player.hasAbilityDoodle = true;
-                else
-                {
-                    doodlePrefab.transform.localScale += Vector3.one * 3;
-                    doodleLogic.damage *= 1.1f;
-                }
-                level[0]++;
-                break;
-            case "Whip":
-                if (!player.hasAbilityWhip) player.hasAbilityWhip = true;
-                else
-                {
-                    whipPrefab.transform.localScale += Vector3.one * 3;
-                    whipLogic.damage *= 1.1f;
-                }
-                level[1]++;
-                break;
-            case "PowerUp":
-                doodleLogic.damageIncreaseRate += 0.1f;
-                whipLogic.damageIncreaseRate += 0.1f;
-                level[2]++;
-                break;
-            case "Speed Up":
-                player.Speed *= 1.05f;
-                level[3]++;
-                break;
-        }
-        gm.resume();
+        switchAbility(ability);
     }
     public void rankUp2()
     {
         string ability = abilityNameText[1].text;
-        Doodle doodleLogic = doodlePrefab.GetComponent<Doodle>();
-        Whip whipLogic = whipPrefab.GetComponent<Whip>();
-        switch (ability)
-        {
-            case "Doodle":
-                if (!player.hasAbilityDoodle) player.hasAbilityDoodle = true;
-                else
-                {
-                    doodlePrefab.transform.localScale += Vector3.one * 3;
-                    doodleLogic.damage *= 1.1f;
-                }
-                level[0]++;
-                break;
-            case "Whip":
-                if (!player.hasAbilityWhip) player.hasAbilityWhip = true;
-                else
-                {
-                    whipPrefab.transform.localScale += Vector3.one * 3;
-                    whipLogic.damage *= 1.1f;
-                }
-                level[1]++;
-                break;
-            case "PowerUp":
-                doodleLogic.damageIncreaseRate += 0.1f;
-                level[2]++;
-                break;
-            case "Speed Up":
-                player.Speed *= 1.05f;
-                level[3]++;
-                break;
-        }
-        gm.resume();
+        switchAbility(ability);
     }
     public void rankUp3()
     {
         string ability = abilityNameText[2].text;
+        switchAbility(ability);
+    }
+
+    void switchAbility(string ability)
+    {
         Doodle doodleLogic = doodlePrefab.GetComponent<Doodle>();
         Whip whipLogic = whipPrefab.GetComponent<Whip>();
         switch (ability)
         {
             case "Doodle":
-                if (!player.hasAbilityDoodle) player.hasAbilityDoodle = true;
+                if (!player.hasAbilityDoodle) { player.hasAbilityDoodle = true; displayAbility(0); }
                 else
                 {
-                    doodlePrefab.transform.localScale += Vector3.one * 3;
-                    doodleLogic.damage *= 1.1f;
+                    for (int i = 0; i < ObjectPool.Instance.doodlePool.Count; i++)
+                    {
+                        Doodle doodle = ObjectPool.Instance.doodlePool[i].GetComponent<Doodle>();
+                        doodle.damage += 2;
+                        ObjectPool.Instance.doodlePool[i].transform.localScale += Vector3.one * 3f;
+                    }
                 }
                 level[0]++;
                 break;
             case "Whip":
-                if (!player.hasAbilityWhip) player.hasAbilityWhip = true;
+                if (!player.hasAbilityWhip) { player.hasAbilityWhip = true; displayAbility(1); }
                 else
                 {
-                    whipPrefab.transform.localScale += Vector3.one * 3;
-                    whipLogic.damage *= 1.1f;
+                    for (int i = 0; i < ObjectPool.Instance.whipPool.Count; i++)
+                    {
+                        Whip whip = ObjectPool.Instance.whipPool[i].GetComponent<Whip>();
+                        whip.damage += 2;
+                        ObjectPool.Instance.whipPool[i].transform.localScale += Vector3.one * 3f;
+                    }
                 }
                 level[1]++;
                 break;
-            case "PowerUp":
-                doodleLogic.damageIncreaseRate += 0.1f;
+            case "Power Up":
+                if (level[2] == 0) displayAbility(2);
+                player.playerDamage *= 1.1f;
                 level[2]++;
                 break;
             case "Speed Up":
+                if (level[3] == 0) displayAbility(3);
                 player.Speed *= 1.05f;
                 level[3]++;
                 break;

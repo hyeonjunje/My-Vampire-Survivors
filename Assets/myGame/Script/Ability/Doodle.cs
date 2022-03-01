@@ -9,7 +9,6 @@ public class Doodle : Ability
     
     // Doodle
     bool isFilp;
-    public float damage;
 
     void Awake()
     {
@@ -20,7 +19,7 @@ public class Doodle : Ability
     }
     private void OnEnable()
     {
-        totalDamage = damage * (1 + damageIncreaseRate);
+        
     }
 
     Vector2 fireVec()

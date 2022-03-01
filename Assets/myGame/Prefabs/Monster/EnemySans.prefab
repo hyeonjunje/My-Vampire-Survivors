@@ -247,6 +247,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 72ec15af6781831469e8cd216d09cdc2, type: 2}
+  gm: {fileID: 0}
+  DestroyEnemyCount: {fileID: 0}
   player: {fileID: 0}
   canvas: {fileID: 1945185586210529064}
   hpBar: {fileID: 5146761438791503796}

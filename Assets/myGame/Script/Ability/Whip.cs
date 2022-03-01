@@ -6,7 +6,7 @@ public class Whip : Ability
 {
     bool isMove;
     bool isFilp;
-    public float damage;
+
     SpriteRenderer spriteRenderer;
 
 
@@ -18,7 +18,7 @@ public class Whip : Ability
     }
     private void OnEnable()
     {
-        totalDamage = damage * (1 + damageIncreaseRate);
+        
     }
 
     public void logic()
@@ -48,7 +48,7 @@ public class Whip : Ability
             spriteRenderer.flipX = true;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         ObjectPool.Instance.ReturnObject(gameObject);
     }
 }
