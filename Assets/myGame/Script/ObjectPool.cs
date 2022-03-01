@@ -12,6 +12,7 @@ public class ObjectPool : MonoBehaviour
 
     // 능력
     public GameObject doodlePrefab;
+    public GameObject whipPrefab;
 
     // 아이템
     public GameObject redSoulPrefab;
@@ -29,6 +30,7 @@ public class ObjectPool : MonoBehaviour
     public List<GameObject> redSoulPool { get; private set; }
     public List<GameObject> blueSoulPool { get; private set; }
     public List<GameObject> dmgTextPool { get; private set; }
+    public List<GameObject> whipPool { get; private set; }
     private void Awake()
     {
         Instance = this;
@@ -40,6 +42,7 @@ public class ObjectPool : MonoBehaviour
         redSoulPool = new List<GameObject>();
         blueSoulPool = new List<GameObject>();
         dmgTextPool = new List<GameObject>();
+        whipPool = new List<GameObject>();
 
         for (var i = 0; i < 50; i++)
         {
@@ -58,6 +61,12 @@ public class ObjectPool : MonoBehaviour
             var obj = Instantiate(doodlePrefab, transform);
             obj.SetActive(false);
             doodlePool.Add(obj);
+        }
+        for (var i = 0; i < 10; i++)
+        {
+            var obj = Instantiate(whipPrefab, transform);
+            obj.SetActive(false);
+            whipPool.Add(obj);
         }
         for (var i = 0; i < 100; i++)
         {
@@ -95,6 +104,10 @@ public class ObjectPool : MonoBehaviour
             case "Doodle":
                 Pool = doodlePool;
                 prefab = doodlePrefab;
+                break;
+            case "Whip":
+                Pool = whipPool;
+                prefab = whipPrefab;
                 break;
             case "RedSoul":
                 Pool = redSoulPool;

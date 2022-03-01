@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
 
-    int curHp;
+    float curHp;
     float doodleAttackTime;
 
     public GameObject player;
@@ -50,7 +50,9 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.tag == "ability Multi Hit")
         {
-            int abilityDamage = collision.GetComponent<Ability>().damage;
+            float abilityDamage = collision.GetComponent<Ability>().totalDamage;
+
+            if (collision.name == "Doodle") abilityDamage = collision.GetComponent<Doodle>().totalDamage;
 
             StopCoroutine(hideHp());
             StartCoroutine(hideHp());
@@ -72,7 +74,9 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.tag == "ability")
         {
-            int abilityDamage = collision.GetComponent<Ability>().damage;
+            float abilityDamage = collision.GetComponent<Ability>().totalDamage;
+
+            if (collision.name == "Whip") abilityDamage = collision.GetComponent<Whip>().totalDamage;
 
             StopCoroutine(hideHp());
             StartCoroutine(hideHp());
@@ -94,7 +98,7 @@ public class EnemyController : MonoBehaviour
         canvas.SetActive(false);
     }
 
-    IEnumerator hit(Vector2 reactVec, int damage)
+    IEnumerator hit(Vector2 reactVec, float damage)
     {
         //curHp -= player.GetComponent<Player>().playerDamage;
         curHp -= damage;
@@ -103,7 +107,7 @@ public class EnemyController : MonoBehaviour
         dmgTextObj.transform.position = transform.position + Vector3.up * 3f;
         dmgTextObj.SetActive(true);
         TextMeshPro dmgTextObjText = dmgTextObj.GetComponent<TextMeshPro>();
-        dmgTextObjText.text = damage.ToString();
+        dmgTextObjText.text = ((int)damage).ToString();
         
 
         hpBar.fillAmount = (float)curHp / enemyData.Hp;
@@ -120,7 +124,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            var obj = ObjectPool.Instance.GetObject("BlueSoul");
+            var obj = ObjectPool.Instance.GetObject("RedSoul");
             obj.transform.position = gameObject.transform.position;
             obj.SetActive(true);
 

@@ -16,9 +16,13 @@ public class Player : MonoBehaviour
     private bool isMove;
     private Vector2 movement;
 
-    public Ability doodleAbility;
+    public Doodle doodleAbility;
     public bool hasAbilityDoodle;
     float DoodleTime;
+
+    public Whip whipAbility;
+    public bool hasAbilityWhip;
+    float WhipTIme;
 
     void Start()
     {
@@ -61,11 +65,26 @@ public class Player : MonoBehaviour
                 DoodleTime = 0f;
 
                 GameObject doodle = ObjectPool.Instance.GetObject("Doodle");
-                Ability doodleA = doodle.GetComponent<Ability>();
+                Doodle doodleA = doodle.GetComponent<Doodle>();
                 doodleA.player = transform;
 
                 doodle.SetActive(true);
                 doodleA.logic();
+            }
+        }
+        if(hasAbilityWhip)
+        {
+            WhipTIme += Time.deltaTime;
+            if(WhipTIme >= whipAbility.coolTime)
+            {
+                WhipTIme = 0;
+
+                GameObject whip = ObjectPool.Instance.GetObject("Whip");
+                Whip whipA = whip.GetComponent<Whip>();
+                whipA.player = transform;
+
+                whip.SetActive(true);
+                whipA.logic();
             }
         }
     }

@@ -112,5 +112,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb315770927f16a498269c611b48b172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soulAmount: 200
+  soulAmount: 50
   getRange: 3

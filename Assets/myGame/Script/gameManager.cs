@@ -10,6 +10,9 @@ public class gameManager : MonoBehaviour
     public float maxExperience;
     public Text lvText;
     public Image soulBar;
+    public GameObject rewardPanel;
+    public AbilityManager abilityManager;
+
 
     public GameObject player;
     //public ObjectPool objectPool;
@@ -69,22 +72,28 @@ public class gameManager : MonoBehaviour
         Vector3 pos = player.transform.position + new Vector3(70 * Mathf.Cos(ranAngle), 70 * Mathf.Sin(ranAngle), 0);
         return pos;
     }
-
-    /*public int level;
-    public float experience;
-    public float maxExperience;
-    public Text lvText;
-    public Image soulBar;*/
     public void levelUp(float expAmount)
     {
         experience += expAmount;
-        if(experience >= maxExperience)
+        
+        lvText.text = "LV : " + level.ToString();
+        soulBar.fillAmount = experience / maxExperience;
+
+        if (experience >= maxExperience)
         {
+            rewardPanel.SetActive(true);
+
             level++;
             experience = experience - maxExperience;
             maxExperience *= 1.1f;
+
+            Time.timeScale = 0;
+            abilityManager.display();
         }
-        lvText.text = "LV : " + level.ToString();
-        soulBar.fillAmount = experience / maxExperience;
+    }
+    public void resume()
+    {
+        Time.timeScale = 1;
+        rewardPanel.SetActive(false);
     }
 }
